@@ -31,10 +31,10 @@ E_ARRAY = [
 S_ARRAY = [
 
     [
-    [14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9,  0,  7],
-    [ 0, 15,  7,  4, 14,  2, 13,  1, 10,  6, 12, 11,  9,  5,  3,  8],
-    [ 4,  1, 14,  8, 13,  6,  2, 11, 15, 12,  9,  7,  3, 10,  5,  0],
-    [15, 12,  8,  2,  4,  9,  1,  7,  5, 11,  3, 14, 10,  0,  6, 13]
+        [14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9,  0,  7],
+        [ 0, 15,  7,  4, 14,  2, 13,  1, 10,  6, 12, 11,  9,  5,  3,  8],
+        [ 4,  1, 14,  8, 13,  6,  2, 11, 15, 12,  9,  7,  3, 10,  5,  0],
+        [15, 12,  8,  2,  4,  9,  1,  7,  5, 11,  3, 14, 10,  0,  6, 13]
     ],
     [
         [15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10],
@@ -235,9 +235,23 @@ def encryption(lpt, rpt, left_key, right_key):
     return temp_lpt, temp_rpt
 
 
+def display_and_write(array):
+    for i in range(0, len(array), 4):
+        hex_num = array[i] * 8 + array[i+1] * 4 + array[i+2] * 2 + array[i+3]
+        print(format(hex_num, 'x'), end='')
+        output_file.write(str(format(hex_num, 'x')))
+    print("")
+
+
+def display(array):
+    for i in range(0, len(array), 4):
+        hex_num = array[i] * 8 + array[i+1] * 4 + array[i+2] * 2 + array[i+3]
+        print(format(hex_num, 'x'), end='')
+    print("")
+
 data_file = open("input.txt", "rb")
 key_file = open("keys.bin", "rb")
-output_file = open("output.bin", "wb")
+output_file = open("output.txt", "w")
 
 data = data_file.read()
 keys = key_file.read()
@@ -264,13 +278,16 @@ for num in range(len(data_array)):
 for num in range(0, len(data_array), 64):
     # initial permutation
     LPT, RPT = initial_permutation(data_array[num:num + 64])
-    LEFT_KEY, RIGHT_KEY = key_permutation(keys_array[0: 64])
+    LEFT_KEY, RIGHT_KEY = key_permutation(keys_array[num:num + 64])
     # encryption
     LPT, RPT = encryption(LPT, RPT, LEFT_KEY, RIGHT_KEY)
     # final permutation with changed order RPT and LPT
     CIPHER_TEXT = final_permutation(RPT, LPT)
 
-    print("PLAIN TEXT:", data_array[num:num + 64])
-    print("KEY:", keys_array[num:num + 64])
-    print("CIPHER TEXT:", CIPHER_TEXT)
-    # output_file.write(CIPHER_TEXT)
+    print("PLAIN TEXT:", end='')
+    display(data_array[num:num + 64])
+    print("KEY:", end='')
+    display(keys_array[num:num + 64])
+    print("CIPHER TEXT:", end='')
+    display_and_write(CIPHER_TEXT)
+
