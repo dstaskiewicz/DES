@@ -249,6 +249,7 @@ def display(array):
         print(format(hex_num, 'x'), end='')
     print("")
 
+
 data_file = open("input.txt", "rb")
 key_file = open("keys.bin", "rb")
 output_file = open("output.txt", "w")
